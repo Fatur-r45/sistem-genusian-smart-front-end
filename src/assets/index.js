@@ -30,8 +30,12 @@ import avatar2 from "./img/avatar-2.png";
 import avatar3 from "./img/avatar-3.png";
 import tumbnail from "./img/tumbnail-1.png";
 import tumbnail2 from "./img/tumbnail-2.png";
+import bg_g from "./img/Opacity.png";
+import canpas from "./img/canpas.png";
 
 export {
+  canpas,
+  bg_g,
   result,
   delet,
   add,

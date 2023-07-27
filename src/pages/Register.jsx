@@ -14,15 +14,15 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/mahasiswa", {
-        nim: nim,
-      });
       await axios.post("http://localhost:5000/users", {
         user_name: userName,
         nim: nim,
         email: email,
         password: password,
         confPassword: confPassword,
+      });
+      await axios.post("http://localhost:5000/mahasiswa", {
+        nim: nim,
       });
       navigate("/login");
     } catch (error) {

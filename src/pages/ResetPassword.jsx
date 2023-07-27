@@ -1,24 +1,25 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
+const ResetPassword = () => {
   const [password, setPassword] = useState("");
+  const [confPassword, setConfPassword] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
-
+  const params = useParams();
+  const token = params.token;
   const onSubmit = async (e) => {
     e.preventDefault();
+    navigate("/login");
     try {
-      await axios.post("http://localhost:5000/login", {
-        email: email,
+      await axios.put(`http://localhost:5000/resetPassword/${token}`, {
         password: password,
+        confPassword: confPassword,
       });
-      navigate("/");
     } catch (error) {
       if (error.response) {
-        setMsg(error.response.data.msg);
+        setMsg(error.response);
       }
     }
   };
@@ -28,32 +29,26 @@ const Login = () => {
         Selamat Datang
       </h2>
       <p className="my-4">Masuk dengan akun yang terdaftar</p>
-      <p className="my-4 text-danger">{msg}</p>
       <div className="container">
         <form onSubmit={onSubmit} className="flex flex-col">
           <input
-            type="email"
-            placeholder="Email"
-            name="email"
+            type="password"
+            placeholder="Kata Sandi"
+            name="password"
             className="w-full lg:w-1/2 py-3 border-2 border-solid px-5 my-2 rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             autoComplete="true"
           />
           <input
             type="password"
             name="email"
-            placeholder="Password"
+            placeholder="Ulangi Kata Sandi"
             className="w-full lg:w-1/2 py-3 border-2 border-solid px-5 my-2 rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confPassword}
+            onChange={(e) => setConfPassword(e.target.value)}
           />
-          <Link
-            to={"/reset_password"}
-            className="text-primary font-semibold text-end w-full lg:w-1/2 "
-          >
-            Lupa Kata Sandi?
-          </Link>
+          <p className="my-4 text-danger">{msg}</p>
           <button
             className="lg:w-1/2 w-full bg-primary py-3 my-3 rounded text-neutral font-semibold"
             type="submit"
@@ -62,17 +57,8 @@ const Login = () => {
           </button>
         </form>
       </div>
-      <div className="absolute bottom-10 lg:bottom-5 left-0 container">
-        <p className="font-semibold text-center">
-          belum punya akun?{" "}
-          <Link to={"/register"} className="text-primary">
-            {" "}
-            daftar sekarang
-          </Link>
-        </p>
-      </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;

@@ -11,6 +11,9 @@ const Create = ({ nim }) => {
   const [keterangan, setKeterangan] = useState("");
   const [pdf, setPdf] = useState("");
   const [tanggal_dapat, setTanggal_dapat] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [getDataSertifikat, setGetDataSertifikat] = useState([]);
+  const [point, setPoint] = useState("");
   const navigasi = useNavigate();
   const params = useParams();
   const getData = async (id) => {
@@ -19,7 +22,25 @@ const Create = ({ nim }) => {
     return res;
   };
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const getJenisSertifikat = async () => {
+    const data = await axios.get("http://localhost:5000/jenis_sertifikat");
+    const res = data.data.data;
+    setGetDataSertifikat(res);
+  };
+
+  const handleSertifikat = (e) => {
+    setKeterangan(e.target.textContent);
+    const point = e.target.getAttribute("point");
+    setPoint(point);
+    setIsOpen(false);
+  };
+
   useEffect(() => {
+    getJenisSertifikat();
+
     if (params.id) {
       const fethData = async () => {
         const res = await getData(params.id);
@@ -91,6 +112,7 @@ const Create = ({ nim }) => {
               keterangan: keterangan,
               pdf: pdf,
               tanggal_dapat: tanggal_dapat,
+              point: point,
             },
             {
               headers: {
@@ -163,15 +185,36 @@ const Create = ({ nim }) => {
           </div>
           <div className="flex flex-col gap-y-1">
             <p className="capitalize font-semibold text-base">
-              kategori / prestasi yang diraih
+              jenis sertifikat
             </p>
-            <input
+            <button
               type="text"
-              className="outline-none border-b-[1px] py-2 border-black font-medium text-base"
+              className="outline-none border-b-[1px] py-2 border-black font-medium text-base text-left capitalize"
               placeholder="contoh: peserta test"
-              value={keterangan}
-              onChange={(e) => setKeterangan(e.target.value)}
-            />
+              onClick={toggleDropdown}
+              // value={keterangan}
+              // onChange={(e) => setKeterangan(e.target.value)}
+            >
+              {keterangan == "" ? "Dropdown" : keterangan}
+            </button>
+            {isOpen && (
+              <div className="mt-2 bg-white rounded shadow-lg">
+                <ul className="py-2">
+                  {getDataSertifikat.map((data) => {
+                    return (
+                      <li
+                        className="px-4 py-2 text-base font-medium capitalize"
+                        key={data.id}
+                        point={data.point}
+                        onClick={handleSertifikat}
+                      >
+                        {data.jenis}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-y-1">
             <p className="capitalize font-semibold text-base">penerbit</p>

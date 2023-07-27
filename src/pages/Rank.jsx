@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { avatar1, avatar2, avatar3, crown, medal } from "../assets";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Rank = () => {
   const [mahasiswa1, setMahasiswa1] = useState([]);
   const [mahasiswa2, setMahasiswa2] = useState([]);
   const [mahasiswa3, setMahasiswa3] = useState([]);
+  const navigasi = useNavigate();
   useEffect(() => {
     const getData = async () => {
       const data = await axios.get("http://localhost:5000/mahasiswa");
@@ -17,6 +19,10 @@ const Rank = () => {
     getData();
   }, [mahasiswa1, mahasiswa2, mahasiswa3]);
 
+  const slug = (data) => {
+    const link = data.split(" ").join("-");
+    return link;
+  };
   // console.log(mahasiswa1);
 
   // console.log(mahasiswa[0].nama);
@@ -52,6 +58,7 @@ const Rank = () => {
                 src={avatar1}
                 alt="avatar"
                 className="rounded-full h-16 w-16"
+                onClick={() => navigasi(`/${slug(mahasiswa2.nama)}`)}
               />
               <p className="truncate text-xs font-semibold">
                 {mahasiswa2.nama}
@@ -69,11 +76,14 @@ const Rank = () => {
                 src={avatar2}
                 alt="avatar"
                 className="rounded-full h-16 w-16"
+                onClick={() => navigasi(`/${slug(mahasiswa1.nama)}`)}
               />
               <p className="truncate text-xs font-semibold">
                 {mahasiswa1.nama}
               </p>
-              <p className="truncate text-xs font-normal">{mahasiswa1.nama}</p>
+              <p className="truncate text-xs font-normal">
+                {mahasiswa1.jurusan}
+              </p>
               <div className="bg-[#7E0048] absolute bottom-0 w-16 h-28 rounded-t-lg text-center">
                 <p className="font-semibold text-white mt-3">1</p>
               </div>
@@ -83,6 +93,7 @@ const Rank = () => {
                 src={avatar3}
                 alt="avatar"
                 className="rounded-full h-16 w-16"
+                onClick={() => navigasi(`/${slug(mahasiswa3.nama)}`)}
               />
               <p className="truncate text-xs font-semibold">
                 {mahasiswa3.nama}
